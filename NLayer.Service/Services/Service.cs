@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NLayer.Service.Excaption;
 using NlayerCoreApp.Repositories;
 using NlayerCoreApp.Service;
 using NlayerCoreApp.UnitOfWorks;
@@ -53,7 +54,12 @@ namespace NLayer.Service.Services
 
         public async Task<T> GetByIdAync(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            var hasProduct= await _repository.GetByIdAsync(id);
+            if (hasProduct == null)
+            {
+                throw new ClientSideException($"{typeof(T).Name}");
+            }
+            return hasProduct;
         }
 
         public async Task<T> AddAsync(T entity)
